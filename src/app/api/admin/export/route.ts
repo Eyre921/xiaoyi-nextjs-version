@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
         filename += '-all.csv';
       }
 
-      return new NextResponse(addUTF8BOM(csvContent), {
+      return new NextResponse(addUTF8BOM(csvContent) as BodyInit, {
         headers: {
           'Content-Type': 'text/csv; charset=utf-8',
           'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`,
