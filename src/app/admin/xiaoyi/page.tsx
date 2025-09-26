@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { 
@@ -97,10 +97,6 @@ interface Bracelet {
   user_status?: string;
 }
 
-interface AdminPageProps {
-  params: Promise<{ token: string }>;
-}
-
 interface Stats {
   totalUsers: number;
   activeUsers: number;
@@ -111,8 +107,9 @@ interface Stats {
   todayActivity?: number;
 }
 
-export default function AdminPage({ params }: AdminPageProps) {
-  const resolvedParams = use(params);
+export default function AdminPage() {
+  // 使用固定的xiaoyi作为认证token
+  const authToken = 'xiaoyi';
   
   // 状态管理
   const [users, setUsers] = useState<User[]>([]);
@@ -194,7 +191,7 @@ export default function AdminPage({ params }: AdminPageProps) {
       const url = `${endpoint}?${params.toString()}`;
       
       const response = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${resolvedParams.token}` }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
       
       if (response.ok) {
@@ -231,7 +228,7 @@ export default function AdminPage({ params }: AdminPageProps) {
       const url = `/api/admin/search/matches?${params.toString()}`;
       
       const response = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${resolvedParams.token}` }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
       
       if (response.ok) {
@@ -275,7 +272,7 @@ export default function AdminPage({ params }: AdminPageProps) {
       const url = `${endpoint}?${params.toString()}`;
       
       const response = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${resolvedParams.token}` }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
       
       if (response.ok) {
@@ -298,7 +295,7 @@ export default function AdminPage({ params }: AdminPageProps) {
   const fetchStats = async () => {
     try {
       const response = await fetch('/api/admin/stats', {
-        headers: { 'Authorization': `Bearer ${resolvedParams.token}` }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
       
       if (response.ok) {
@@ -313,7 +310,7 @@ export default function AdminPage({ params }: AdminPageProps) {
   const fetchActivities = async () => {
     try {
       const response = await fetch('/api/admin/activities?limit=5', {
-        headers: { 'Authorization': `Bearer ${resolvedParams.token}` }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
       
       if (response.ok) {
@@ -355,7 +352,7 @@ export default function AdminPage({ params }: AdminPageProps) {
   const handleExport = async (type: string) => {
     try {
       const response = await fetch(`/api/admin/export?type=${type}&format=csv`, {
-        headers: { 'Authorization': `Bearer ${resolvedParams.token}` }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
       
       if (response.ok) {
@@ -379,7 +376,7 @@ export default function AdminPage({ params }: AdminPageProps) {
     try {
       const response = await fetch(`/api/admin/users/${user.id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${resolvedParams.token}` }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
       
       if (response.ok) {
@@ -419,7 +416,7 @@ export default function AdminPage({ params }: AdminPageProps) {
     };
     
     initData();
-  }, [resolvedParams.token]);
+  }, [authToken]);
 
   // 搜索效果 - 防抖处理，避免频繁请求
   useEffect(() => {
@@ -610,33 +607,6 @@ export default function AdminPage({ params }: AdminPageProps) {
                         <p className="text-sm">暂无活动记录</p>
                       </div>
                     )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>系统状态</CardTitle>
-                  <CardDescription>当前系统运行状态</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">数据库连接</span>
-                      <Badge variant="default">正常</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">API服务</span>
-                      <Badge variant="default">正常</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">缓存服务</span>
-                      <Badge variant="default">正常</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">存储空间</span>
-                      <Badge variant="secondary">85% 使用</Badge>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
