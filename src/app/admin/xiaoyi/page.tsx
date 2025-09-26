@@ -485,53 +485,58 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground dark">
-      <div className="container mx-auto p-6 space-y-8">
+      <div className="container mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8">
         {/* 页面标题 */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">管理后台</h1>
-            <p className="text-muted-foreground">系统数据管理与监控</p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">管理后台</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">系统数据管理与监控</p>
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="w-full sm:w-auto">
             <Settings className="w-4 h-4 mr-2" />
             设置
           </Button>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              概览
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto">
+            <TabsTrigger value="overview" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2 sm:p-3">
+              <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">概览</span>
+              <span className="sm:hidden">概览</span>
             </TabsTrigger>
-            <TabsTrigger value="users" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              用户管理
+            <TabsTrigger value="users" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2 sm:p-3">
+              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">用户管理</span>
+              <span className="sm:hidden">用户</span>
             </TabsTrigger>
-            <TabsTrigger value="matches" className="flex items-center gap-2">
-              <Heart className="w-4 h-4" />
-              匹配记录
+            <TabsTrigger value="matches" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2 sm:p-3">
+              <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">匹配记录</span>
+              <span className="sm:hidden">匹配</span>
             </TabsTrigger>
-            <TabsTrigger value="bracelets" className="flex items-center gap-2">
-              <Watch className="w-4 h-4" />
-              手环管理
+            <TabsTrigger value="bracelets" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2 sm:p-3">
+              <Watch className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">手环管理</span>
+              <span className="sm:hidden">手环</span>
             </TabsTrigger>
-            <TabsTrigger value="export" className="flex items-center gap-2">
-              <Download className="w-4 h-4" />
-              数据导出
+            <TabsTrigger value="export" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2 sm:p-3">
+              <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">数据导出</span>
+              <span className="sm:hidden">导出</span>
             </TabsTrigger>
           </TabsList>
 
           {/* 概览标签页 */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <TabsContent value="overview" className="space-y-4 sm:space-y-6">
+            <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">总用户数</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-xs sm:text-sm font-medium">总用户数</CardTitle>
+                  <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalUsers}</div>
+                  <div className="text-lg sm:text-2xl font-bold">{stats.totalUsers}</div>
                   <p className="text-xs text-muted-foreground">
                     活跃用户: {stats.activeUsers}
                   </p>
@@ -540,11 +545,11 @@ export default function AdminPage() {
               
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">总匹配数</CardTitle>
-                  <Heart className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-xs sm:text-sm font-medium">总匹配数</CardTitle>
+                  <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalMatches}</div>
+                  <div className="text-lg sm:text-2xl font-bold">{stats.totalMatches}</div>
                   <p className="text-xs text-muted-foreground">
                     成功匹配: {stats.successfulMatches}
                   </p>
@@ -553,11 +558,11 @@ export default function AdminPage() {
               
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">活跃手环</CardTitle>
-                  <Watch className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-xs sm:text-sm font-medium">活跃手环</CardTitle>
+                  <Watch className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.activeBracelets}</div>
+                  <div className="text-lg sm:text-2xl font-bold">{stats.activeBracelets}</div>
                   <p className="text-xs text-muted-foreground">
                     总手环: {stats.totalBracelets}
                   </p>
@@ -566,11 +571,11 @@ export default function AdminPage() {
               
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">今日活动</CardTitle>
-                  <Activity className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-xs sm:text-sm font-medium">今日活动</CardTitle>
+                  <Activity className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.todayActivity || 0}</div>
+                  <div className="text-lg sm:text-2xl font-bold">{stats.todayActivity || 0}</div>
                   <p className="text-xs text-muted-foreground">
                     新增用户和匹配
                   </p>
@@ -581,29 +586,29 @@ export default function AdminPage() {
             <div className="grid gap-4 md:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>最近活动</CardTitle>
-                  <CardDescription>系统最新的用户活动记录</CardDescription>
+                  <CardTitle className="text-base sm:text-lg">最近活动</CardTitle>
+                  <CardDescription className="text-sm">系统最新的用户活动记录</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {activities.length > 0 ? (
                       activities.map((activity, index) => (
-                        <div key={index} className="flex items-center space-x-4">
-                          <div className={`w-2 h-2 rounded-full ${
+                        <div key={index} className="flex items-center space-x-3 sm:space-x-4">
+                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
                             activity.type === 'user_registration' ? 'bg-green-500' :
                             activity.type === 'match_success' ? 'bg-blue-500' :
                             activity.type === 'bracelet_binding' ? 'bg-orange-500' :
                             'bg-gray-500'
                           }`}></div>
-                          <div className="flex-1 space-y-1">
-                            <p className="text-sm font-medium">{activity.description}</p>
-                            <p className="text-xs text-muted-foreground">{activity.details}</p>
+                          <div className="flex-1 space-y-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{activity.description}</p>
+                            <p className="text-xs text-muted-foreground truncate">{activity.details}</p>
                             <p className="text-xs text-muted-foreground">{activity.timeAgo}</p>
                           </div>
                         </div>
                       ))
                     ) : (
-                      <div className="text-center text-muted-foreground">
+                      <div className="text-center text-muted-foreground py-4">
                         <p className="text-sm">暂无活动记录</p>
                       </div>
                     )}
@@ -614,11 +619,11 @@ export default function AdminPage() {
           </TabsContent>
 
           {/* 用户管理标签页 */}
-          <TabsContent value="users" className="space-y-6">
+          <TabsContent value="users" className="space-y-4 sm:space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight">用户管理</h2>
-                <p className="text-muted-foreground">管理系统中的所有用户信息</p>
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">用户管理</h2>
+                <p className="text-sm sm:text-base text-muted-foreground">管理系统中的所有用户信息</p>
               </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                 <div className="relative flex-1 sm:flex-initial">
@@ -627,7 +632,7 @@ export default function AdminPage() {
                     placeholder="搜索用户名、微信号、NFC UID..."
                     value={userSearchQuery}
                     onChange={(e) => setUserSearchQuery(e.target.value)}
-                    className="pl-10 w-full sm:w-[300px]"
+                    className="pl-10 w-full sm:w-[300px] text-sm"
                   />
                 </div>
                 <div className="flex gap-2">
@@ -635,101 +640,119 @@ export default function AdminPage() {
                     variant="outline" 
                     size="sm"
                     onClick={() => fetchUsers(userPage, debouncedUserSearch)}
+                    className="text-xs sm:text-sm"
                   >
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    刷新
+                    <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">刷新</span>
                   </Button>
-                  <Button size="sm">
-                    <Plus className="w-4 h-4 mr-2" />
-                    添加用户
+                  <Button size="sm" className="text-xs sm:text-sm">
+                    <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">添加用户</span>
+                    <span className="sm:hidden">添加</span>
                   </Button>
                 </div>
               </div>
             </div>
 
-            <Card>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>用户信息</TableHead>
-                    <TableHead>性别</TableHead>
-                    <TableHead>状态</TableHead>
-                    <TableHead>可匹配</TableHead>
-                    <TableHead>创建时间</TableHead>
-                    <TableHead className="text-right">操作</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <div className="font-medium">{user.name}</div>
-                          <div className="text-sm text-muted-foreground">@{user.wechat_id}</div>
-                          <div className="text-xs text-muted-foreground">ID: {user.id}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={user.gender === 'male' ? 'default' : 'secondary'}>
-                          {user.gender === 'male' ? '男' : '女'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={user.status === 'active' ? 'default' : 'secondary'}>
-                          {user.status === 'active' ? '活跃' : '非活跃'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={user.is_matchable ? 'default' : 'outline'}>
-                          {user.is_matchable ? '可匹配' : '不可匹配'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {new Date(user.created_at).toLocaleDateString('zh-CN')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setSelectedUser(user)}
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setEditingUser(user)}
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setDeletingUser(user)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+            <Card className="overflow-hidden">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="min-w-[150px]">用户信息</TableHead>
+                      <TableHead className="hidden sm:table-cell">性别</TableHead>
+                      <TableHead className="hidden md:table-cell">状态</TableHead>
+                      <TableHead className="hidden lg:table-cell">可匹配</TableHead>
+                      <TableHead className="hidden lg:table-cell">创建时间</TableHead>
+                      <TableHead className="text-right min-w-[100px]">操作</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="min-w-[150px]">
+                          <div className="space-y-1">
+                            <div className="font-medium text-sm">{user.name}</div>
+                            <div className="text-xs text-muted-foreground">@{user.wechat_id}</div>
+                            <div className="text-xs text-muted-foreground">ID: {user.id}</div>
+                            <div className="flex flex-wrap gap-1 sm:hidden mt-2">
+                              <Badge variant={user.gender === 'male' ? 'default' : 'secondary'} className="text-xs">
+                                {user.gender === 'male' ? '男' : '女'}
+                              </Badge>
+                              <Badge variant={user.status === 'active' ? 'default' : 'secondary'} className="text-xs">
+                                {user.status === 'active' ? '活跃' : '非活跃'}
+                              </Badge>
+                              <Badge variant={user.is_matchable ? 'default' : 'outline'} className="text-xs">
+                                {user.is_matchable ? '可匹配' : '不可匹配'}
+                              </Badge>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          <Badge variant={user.gender === 'male' ? 'default' : 'secondary'} className="text-xs">
+                            {user.gender === 'male' ? '男' : '女'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <Badge variant={user.status === 'active' ? 'default' : 'secondary'} className="text-xs">
+                            {user.status === 'active' ? '活跃' : '非活跃'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <Badge variant={user.is_matchable ? 'default' : 'outline'} className="text-xs">
+                            {user.is_matchable ? '可匹配' : '不可匹配'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">
+                          {new Date(user.created_at).toLocaleDateString('zh-CN')}
+                        </TableCell>
+                        <TableCell className="text-right min-w-[100px]">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setSelectedUser(user)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setEditingUser(user)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setDeletingUser(user)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
+                            >
+                              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </Card>
 
             {userTotalPages > 1 && (
-              <div className="flex items-center justify-center space-x-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setUserPage(Math.max(1, userPage - 1))}
                   disabled={userPage === 1}
+                  className="text-xs sm:text-sm w-full sm:w-auto"
                 >
                   上一页
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-xs sm:text-sm text-muted-foreground order-first sm:order-none">
                   第 {userPage} 页，共 {userTotalPages} 页
                 </span>
                 <Button
@@ -737,6 +760,7 @@ export default function AdminPage() {
                   size="sm"
                   onClick={() => setUserPage(Math.min(userTotalPages, userPage + 1))}
                   disabled={userPage === userTotalPages}
+                  className="text-xs sm:text-sm w-full sm:w-auto"
                 >
                   下一页
                 </Button>
@@ -745,11 +769,11 @@ export default function AdminPage() {
           </TabsContent>
 
           {/* 匹配记录标签页 */}
-          <TabsContent value="matches" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <TabsContent value="matches" className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight">匹配记录</h2>
-                <p className="text-muted-foreground">查看所有用户匹配历史记录</p>
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">匹配记录</h2>
+                <p className="text-sm sm:text-base text-muted-foreground">查看所有用户匹配历史记录</p>
               </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                 <div className="relative flex-1 sm:flex-initial">
@@ -758,102 +782,107 @@ export default function AdminPage() {
                     placeholder="搜索用户名、运势ID..."
                     value={matchSearchQuery}
                     onChange={(e) => setMatchSearchQuery(e.target.value)}
-                    className="pl-10 w-full sm:w-[300px]"
+                    className="pl-10 w-full sm:w-[300px] text-sm"
                   />
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => fetchMatches(matchPage, debouncedMatchSearch)}
+                  className="text-xs sm:text-sm"
                 >
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                  <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                   刷新
                 </Button>
               </div>
             </div>
 
-            <Card>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>匹配信息</TableHead>
-                    <TableHead>用户1</TableHead>
-                    <TableHead>用户2</TableHead>
-                    <TableHead>运势信息</TableHead>
-                    <TableHead>匹配时间</TableHead>
-                    <TableHead className="text-right">操作</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {matches.map((match) => {
-                    return (
-                      <TableRow key={match.id}>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="font-medium">匹配 #{match.id}</div>
-                            <div className="text-xs text-muted-foreground">
-                              用户ID: {match.user1_id} ↔ {match.user2_id}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="font-medium">{match.user1_name || `用户 ${match.user1_id}`}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {match.user1_wechat_id ? `@${match.user1_wechat_id}` : `ID: ${match.user1_id}`}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="font-medium">{match.user2_name || `用户 ${match.user2_id}`}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {match.user2_wechat_id ? `@${match.user2_wechat_id}` : `ID: ${match.user2_id}`}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="font-medium">
-                              {match.fortune_id ? `运势 #${match.fortune_id}` : '无运势'}
-                            </div>
-                            {match.fortune_text && (
-                              <div className="text-xs text-muted-foreground max-w-[200px] truncate" title={match.fortune_text}>
-                                {match.fortune_text}
+            <Card className="overflow-hidden">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="min-w-[120px] text-xs sm:text-sm">匹配信息</TableHead>
+                      <TableHead className="min-w-[100px] text-xs sm:text-sm">用户1</TableHead>
+                      <TableHead className="min-w-[100px] text-xs sm:text-sm">用户2</TableHead>
+                      <TableHead className="min-w-[120px] text-xs sm:text-sm">运势信息</TableHead>
+                      <TableHead className="min-w-[120px] text-xs sm:text-sm">匹配时间</TableHead>
+                      <TableHead className="text-right min-w-[60px] text-xs sm:text-sm">操作</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {matches.map((match) => {
+                      return (
+                        <TableRow key={match.id}>
+                          <TableCell className="p-2 sm:p-4">
+                            <div className="space-y-1">
+                              <div className="font-medium text-xs sm:text-sm">匹配 #{match.id}</div>
+                              <div className="text-xs text-muted-foreground">
+                                用户ID: {match.user1_id} ↔ {match.user2_id}
                               </div>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {new Date(match.matched_at).toLocaleString('zh-CN')}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setSelectedMatch(match)}
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+                            </div>
+                          </TableCell>
+                          <TableCell className="p-2 sm:p-4">
+                            <div className="space-y-1">
+                              <div className="font-medium text-xs sm:text-sm">{match.user1_name || `用户 ${match.user1_id}`}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {match.user1_wechat_id ? `@${match.user1_wechat_id}` : `ID: ${match.user1_id}`}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="p-2 sm:p-4">
+                            <div className="space-y-1">
+                              <div className="font-medium text-xs sm:text-sm">{match.user2_name || `用户 ${match.user2_id}`}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {match.user2_wechat_id ? `@${match.user2_wechat_id}` : `ID: ${match.user2_id}`}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="p-2 sm:p-4">
+                            <div className="space-y-1">
+                              <div className="font-medium text-xs sm:text-sm">
+                                {match.fortune_id ? `运势 #${match.fortune_id}` : '无运势'}
+                              </div>
+                              {match.fortune_text && (
+                                <div className="text-xs text-muted-foreground max-w-[120px] sm:max-w-[200px] truncate" title={match.fortune_text}>
+                                  {match.fortune_text}
+                                </div>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-xs sm:text-sm text-muted-foreground p-2 sm:p-4">
+                            {new Date(match.matched_at).toLocaleString('zh-CN')}
+                          </TableCell>
+                          <TableCell className="text-right p-2 sm:p-4">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setSelectedMatch(match)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
             </Card>
 
             {matchTotalPages > 1 && (
-              <div className="flex items-center justify-center space-x-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setMatchPage(Math.max(1, matchPage - 1))}
                   disabled={matchPage === 1}
+                  className="text-xs sm:text-sm w-full sm:w-auto"
                 >
                   上一页
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-xs sm:text-sm text-muted-foreground order-first sm:order-none">
                   第 {matchPage} 页，共 {matchTotalPages} 页
                 </span>
                 <Button
@@ -861,6 +890,7 @@ export default function AdminPage() {
                   size="sm"
                   onClick={() => setMatchPage(Math.min(matchTotalPages, matchPage + 1))}
                   disabled={matchPage === matchTotalPages}
+                  className="text-xs sm:text-sm w-full sm:w-auto"
                 >
                   下一页
                 </Button>
@@ -869,11 +899,11 @@ export default function AdminPage() {
           </TabsContent>
 
           {/* 手环管理标签页 */}
-          <TabsContent value="bracelets" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <TabsContent value="bracelets" className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight">手环管理</h2>
-                <p className="text-muted-foreground">管理所有NFC手环设备</p>
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">手环管理</h2>
+                <p className="text-sm sm:text-base text-muted-foreground">管理所有NFC手环设备</p>
               </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                 <div className="relative flex-1 sm:flex-initial">
@@ -882,14 +912,15 @@ export default function AdminPage() {
                     placeholder="搜索NFC UID..."
                     value={braceletSearchQuery}
                     onChange={(e) => setBraceletSearchQuery(e.target.value)}
-                    className="pl-10 w-full sm:w-[300px]"
+                    className="pl-10 w-full sm:w-[300px] text-sm"
                   />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     variant={braceletFilter === 'all' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setBraceletFilter('all')}
+                    className="text-xs sm:text-sm"
                   >
                     全部
                   </Button>
@@ -897,6 +928,7 @@ export default function AdminPage() {
                     variant={braceletFilter === 'bound' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setBraceletFilter('bound')}
+                    className="text-xs sm:text-sm"
                   >
                     已绑定
                   </Button>
@@ -904,6 +936,7 @@ export default function AdminPage() {
                     variant={braceletFilter === 'unbound' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setBraceletFilter('unbound')}
+                    className="text-xs sm:text-sm"
                   >
                     未绑定
                   </Button>
@@ -911,73 +944,78 @@ export default function AdminPage() {
                     variant="outline" 
                     size="sm"
                     onClick={() => fetchBracelets(braceletPage, debouncedBraceletSearch, braceletFilter)}
+                    className="text-xs sm:text-sm"
                   >
-                    <RefreshCw className="w-4 h-4 mr-2" />
+                    <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                     刷新
                   </Button>
                 </div>
               </div>
             </div>
 
-            <Card>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>NFC UID</TableHead>
-                      <TableHead>状态</TableHead>
-                      <TableHead>绑定用户</TableHead>
-                      <TableHead>创建时间</TableHead>
-                    <TableHead className="text-right">操作</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {bracelets.map((bracelet) => (
-                    <TableRow key={bracelet.nfc_uid}>
-                      <TableCell className="font-mono text-sm">{bracelet.nfc_uid}</TableCell>
-                      <TableCell>
-                        <Badge variant={bracelet.status === 'bound' ? 'default' : 'secondary'}>
-                          {bracelet.status === 'bound' ? '已绑定' : '未绑定'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {bracelet.user_name ? (
-                          <div>
-                            <p className="font-medium">{bracelet.user_name}</p>
-                            <p className="text-xs text-muted-foreground">@{bracelet.user_wechat_id}</p>
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground">未绑定</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {new Date(bracelet.created_at).toLocaleDateString('zh-CN')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedBracelet(bracelet)}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                      </TableCell>
+            <Card className="overflow-hidden">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="min-w-[120px] text-xs sm:text-sm">NFC UID</TableHead>
+                      <TableHead className="min-w-[80px] text-xs sm:text-sm">状态</TableHead>
+                      <TableHead className="min-w-[120px] text-xs sm:text-sm">绑定用户</TableHead>
+                      <TableHead className="min-w-[100px] text-xs sm:text-sm">创建时间</TableHead>
+                      <TableHead className="text-right min-w-[60px] text-xs sm:text-sm">操作</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {bracelets.map((bracelet) => (
+                      <TableRow key={bracelet.nfc_uid}>
+                        <TableCell className="font-mono text-xs sm:text-sm p-2 sm:p-4">{bracelet.nfc_uid}</TableCell>
+                        <TableCell className="p-2 sm:p-4">
+                          <Badge variant={bracelet.status === 'bound' ? 'default' : 'secondary'} className="text-xs">
+                            {bracelet.status === 'bound' ? '已绑定' : '未绑定'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="p-2 sm:p-4">
+                          {bracelet.user_name ? (
+                            <div>
+                              <p className="font-medium text-xs sm:text-sm">{bracelet.user_name}</p>
+                              <p className="text-xs text-muted-foreground">@{bracelet.user_wechat_id}</p>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-xs sm:text-sm">未绑定</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-xs sm:text-sm text-muted-foreground p-2 sm:p-4">
+                          {new Date(bracelet.created_at).toLocaleDateString('zh-CN')}
+                        </TableCell>
+                        <TableCell className="text-right p-2 sm:p-4">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setSelectedBracelet(bracelet)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </Card>
 
             {braceletTotalPages > 1 && (
-              <div className="flex items-center justify-center space-x-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setBraceletPage(Math.max(1, braceletPage - 1))}
                   disabled={braceletPage === 1}
+                  className="text-xs sm:text-sm w-full sm:w-auto"
                 >
                   上一页
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-xs sm:text-sm text-muted-foreground order-first sm:order-none">
                   第 {braceletPage} 页，共 {braceletTotalPages} 页
                 </span>
                 <Button
@@ -985,6 +1023,7 @@ export default function AdminPage() {
                   size="sm"
                   onClick={() => setBraceletPage(Math.min(braceletTotalPages, braceletPage + 1))}
                   disabled={braceletPage === braceletTotalPages}
+                  className="text-xs sm:text-sm w-full sm:w-auto"
                 >
                   下一页
                 </Button>
@@ -993,71 +1032,71 @@ export default function AdminPage() {
           </TabsContent>
 
           {/* 数据导出标签页 */}
-          <TabsContent value="export" className="space-y-6">
+          <TabsContent value="export" className="space-y-4 sm:space-y-6">
             <div className="text-center sm:text-left">
-              <h2 className="text-2xl font-bold tracking-tight">数据导出</h2>
-              <p className="text-muted-foreground">导出系统数据为CSV格式，便于数据分析和备份</p>
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight">数据导出</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">导出系统数据为CSV格式，便于数据分析和备份</p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               <Card className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Users className="w-5 h-5 text-blue-500" />
+                <CardHeader className="pb-3 p-4 sm:p-6">
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                     用户数据
                   </CardTitle>
-                  <CardDescription className="text-sm">
+                  <CardDescription className="text-xs sm:text-sm">
                     导出所有用户信息，包括基本资料和状态
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6 pt-0">
                   <Button 
-                    className="w-full" 
+                    className="w-full text-xs sm:text-sm" 
                     onClick={() => handleExport('users')}
                   >
-                    <FileDown className="w-4 h-4 mr-2" />
+                    <FileDown className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                     导出用户数据
                   </Button>
                 </CardContent>
               </Card>
 
               <Card className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Heart className="w-5 h-5 text-red-500" />
+                <CardHeader className="pb-3 p-4 sm:p-6">
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                    <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                     匹配记录
                   </CardTitle>
-                  <CardDescription className="text-sm">
+                  <CardDescription className="text-xs sm:text-sm">
                     导出所有匹配记录和相关用户信息
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6 pt-0">
                   <Button 
-                    className="w-full" 
+                    className="w-full text-xs sm:text-sm" 
                     onClick={() => handleExport('matches')}
                   >
-                    <FileDown className="w-4 h-4 mr-2" />
+                    <FileDown className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                     导出匹配记录
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Watch className="w-5 h-5 text-green-500" />
+              <Card className="hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
+                <CardHeader className="pb-3 p-4 sm:p-6">
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                    <Watch className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                     手环数据
                   </CardTitle>
-                  <CardDescription className="text-sm">
+                  <CardDescription className="text-xs sm:text-sm">
                     导出所有手环设备信息和绑定状态
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6 pt-0">
                   <Button 
-                    className="w-full" 
+                    className="w-full text-xs sm:text-sm" 
                     onClick={() => handleExport('bracelets')}
                   >
-                    <FileDown className="w-4 h-4 mr-2" />
+                    <FileDown className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                     导出手环数据
                   </Button>
                 </CardContent>
@@ -1068,67 +1107,67 @@ export default function AdminPage() {
 
         {/* 用户详情模态框 */}
         <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>用户详情</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-base sm:text-lg">用户详情</DialogTitle>
+              <DialogDescription className="text-sm">
                 查看用户的详细信息
               </DialogDescription>
             </DialogHeader>
             {selectedUser && (
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-3 sm:gap-4 py-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm font-medium">用户ID</label>
-                    <p className="text-sm text-muted-foreground">{selectedUser.id}</p>
+                    <label className="text-xs sm:text-sm font-medium">用户ID</label>
+                    <p className="text-sm text-muted-foreground break-all">{selectedUser.id}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">姓名</label>
-                    <p className="text-sm text-muted-foreground">{selectedUser.name}</p>
+                    <label className="text-xs sm:text-sm font-medium">姓名</label>
+                    <p className="text-sm text-muted-foreground break-words">{selectedUser.name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">性别</label>
+                    <label className="text-xs sm:text-sm font-medium">性别</label>
                     <p className="text-sm text-muted-foreground">
                       {selectedUser.gender === 'male' ? '男' : '女'}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">微信号</label>
-                    <p className="text-sm text-muted-foreground">{selectedUser.wechat_id}</p>
+                    <label className="text-xs sm:text-sm font-medium">微信号</label>
+                    <p className="text-sm text-muted-foreground break-all">{selectedUser.wechat_id}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">NFC UID</label>
-                    <p className="text-sm text-muted-foreground">
+                    <label className="text-xs sm:text-sm font-medium">NFC UID</label>
+                    <p className="text-sm text-muted-foreground font-mono break-all">
                       {selectedUser.nfc_uid || '未绑定'}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">生日</label>
+                    <label className="text-xs sm:text-sm font-medium">生日</label>
                     <p className="text-sm text-muted-foreground">
                       {selectedUser.birthdate || '未设置'}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">状态</label>
-                    <Badge variant={selectedUser.status === 'active' ? 'default' : 'secondary'}>
+                    <label className="text-xs sm:text-sm font-medium">状态</label>
+                    <Badge variant={selectedUser.status === 'active' ? 'default' : 'secondary'} className="text-xs">
                       {selectedUser.status === 'active' ? '活跃' : '非活跃'}
                     </Badge>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">可匹配</label>
-                    <Badge variant={selectedUser.is_matchable ? 'default' : 'secondary'}>
+                    <label className="text-xs sm:text-sm font-medium">可匹配</label>
+                    <Badge variant={selectedUser.is_matchable ? 'default' : 'secondary'} className="text-xs">
                       {selectedUser.is_matchable ? '是' : '否'}
                     </Badge>
                   </div>
                 </div>
                 {selectedUser.bio && (
                   <div>
-                    <label className="text-sm font-medium">个人简介</label>
-                    <p className="text-sm text-muted-foreground mt-1">{selectedUser.bio}</p>
+                    <label className="text-xs sm:text-sm font-medium">个人简介</label>
+                    <p className="text-sm text-muted-foreground mt-1 break-words">{selectedUser.bio}</p>
                   </div>
                 )}
                 <div>
-                  <label className="text-sm font-medium">创建时间</label>
+                  <label className="text-xs sm:text-sm font-medium">创建时间</label>
                   <p className="text-sm text-muted-foreground">
                     {new Date(selectedUser.created_at).toLocaleString('zh-CN')}
                   </p>
@@ -1140,40 +1179,43 @@ export default function AdminPage() {
 
         {/* 编辑用户模态框 */}
         <Dialog open={!!editingUser} onOpenChange={() => setEditingUser(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>编辑用户</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-base sm:text-lg">编辑用户</DialogTitle>
+              <DialogDescription className="text-sm">
                 修改用户的基本信息
               </DialogDescription>
             </DialogHeader>
             {editingUser && (
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-3 sm:gap-4 py-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm font-medium">姓名</label>
+                    <label className="text-xs sm:text-sm font-medium">姓名</label>
                     <Input
                       value={editingUser.name}
                       onChange={(e) => setEditingUser({...editingUser, name: e.target.value})}
+                      className="text-sm"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">微信号</label>
+                    <label className="text-xs sm:text-sm font-medium">微信号</label>
                     <Input
                       value={editingUser.wechat_id}
                       onChange={(e) => setEditingUser({...editingUser, wechat_id: e.target.value})}
+                      className="text-sm"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">生日</label>
+                    <label className="text-xs sm:text-sm font-medium">生日</label>
                     <Input
                       type="date"
                       value={editingUser.birthdate || ''}
                       onChange={(e) => setEditingUser({...editingUser, birthdate: e.target.value})}
+                      className="text-sm"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">状态</label>
+                    <label className="text-xs sm:text-sm font-medium">状态</label>
                     <select
                       className="flex h-9 w-full rounded-md border border-input bg-background text-foreground px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       value={editingUser.status}
@@ -1185,7 +1227,7 @@ export default function AdminPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">个人简介</label>
+                  <label className="text-xs sm:text-sm font-medium">个人简介</label>
                   <textarea
                     className="flex min-h-[60px] w-full rounded-md border border-input bg-background text-foreground px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     value={editingUser.bio || ''}
@@ -1200,17 +1242,17 @@ export default function AdminPage() {
                     checked={editingUser.is_matchable}
                     onChange={(e) => setEditingUser({...editingUser, is_matchable: e.target.checked})}
                   />
-                  <label htmlFor="is_matchable" className="text-sm font-medium">
+                  <label htmlFor="is_matchable" className="text-xs sm:text-sm font-medium">
                     允许匹配
                   </label>
                 </div>
               </div>
             )}
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setEditingUser(null)}>
+            <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
+              <Button variant="outline" onClick={() => setEditingUser(null)} className="text-sm">
                 取消
               </Button>
-              <Button onClick={handleSaveUser}>
+              <Button onClick={handleSaveUser} className="text-sm">
                 <Save className="w-4 h-4 mr-2" />
                 保存
               </Button>
@@ -1220,57 +1262,55 @@ export default function AdminPage() {
 
         {/* 匹配详情模态框 */}
         <Dialog open={!!selectedMatch} onOpenChange={() => setSelectedMatch(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>匹配详情</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-base sm:text-lg">匹配详情</DialogTitle>
+              <DialogDescription className="text-sm">
                 查看匹配记录的详细信息
               </DialogDescription>
             </DialogHeader>
             {selectedMatch && (
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-3 sm:gap-4 py-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm font-medium">匹配ID</label>
+                    <label className="text-xs sm:text-sm font-medium">匹配ID</label>
                     <p className="text-sm text-muted-foreground">#{selectedMatch.id}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">运势ID</label>
+                    <label className="text-xs sm:text-sm font-medium">运势ID</label>
                     <p className="text-sm text-muted-foreground">{selectedMatch.fortune_id || '无'}</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm font-medium">用户1</label>
-                    <div className="mt-1 p-3 bg-muted rounded-md">
-                      <p className="font-medium">{getUserById(selectedMatch.user1_id)?.name || `用户 ${selectedMatch.user1_id}`}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {getUserById(selectedMatch.user1_id)?.wechat_id ? 
-                          `@${getUserById(selectedMatch.user1_id)?.wechat_id}` : 
-                          `ID: ${selectedMatch.user1_id}`
-                        }
-                      </p>
+                    <label className="text-xs sm:text-sm font-medium">用户1</label>
+                    <div className="mt-1 p-2 sm:p-3 bg-muted rounded-md">
+                      <p className="font-medium text-sm break-words">{selectedMatch.user1_name}</p>
+                      <p className="text-xs text-muted-foreground break-all">@{selectedMatch.user1_wechat_id}</p>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">用户2</label>
-                    <div className="mt-1 p-3 bg-muted rounded-md">
-                      <p className="font-medium">{getUserById(selectedMatch.user2_id)?.name || `用户 ${selectedMatch.user2_id}`}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {getUserById(selectedMatch.user2_id)?.wechat_id ? 
-                          `@${getUserById(selectedMatch.user2_id)?.wechat_id}` : 
-                          `ID: ${selectedMatch.user2_id}`
-                        }
-                      </p>
+                    <label className="text-xs sm:text-sm font-medium">用户2</label>
+                    <div className="mt-1 p-2 sm:p-3 bg-muted rounded-md">
+                      <p className="font-medium text-sm break-words">{selectedMatch.user2_name}</p>
+                      <p className="text-xs text-muted-foreground break-all">@{selectedMatch.user2_wechat_id}</p>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">匹配时间</label>
+                  <label className="text-xs sm:text-sm font-medium">匹配时间</label>
                   <p className="text-sm text-muted-foreground">
                     {new Date(selectedMatch.matched_at).toLocaleString('zh-CN')}
                   </p>
                 </div>
+                {selectedMatch.fortune_text && (
+                  <div>
+                    <label className="text-xs sm:text-sm font-medium">运势消息</label>
+                    <div className="mt-1 p-2 sm:p-3 bg-muted rounded-md">
+                      <p className="text-sm break-words">{selectedMatch.fortune_text}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </DialogContent>
@@ -1278,36 +1318,36 @@ export default function AdminPage() {
 
         {/* 手环详情模态框 */}
         <Dialog open={!!selectedBracelet} onOpenChange={() => setSelectedBracelet(null)}>
-          <DialogContent>
+          <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>手环详情</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-base sm:text-lg">手环详情</DialogTitle>
+              <DialogDescription className="text-sm">
                 查看手环设备的详细信息
               </DialogDescription>
             </DialogHeader>
             {selectedBracelet && (
-              <div className="grid gap-4 py-4">
+              <div className="grid gap-3 sm:gap-4 py-4">
                 <div>
-                  <label className="text-sm font-medium">NFC UID</label>
-                  <p className="text-sm text-muted-foreground font-mono">{selectedBracelet.nfc_uid}</p>
+                  <label className="text-xs sm:text-sm font-medium">NFC UID</label>
+                  <p className="text-sm text-muted-foreground font-mono break-all">{selectedBracelet.nfc_uid}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">状态</label>
-                  <Badge variant={selectedBracelet.status === 'bound' ? 'default' : 'secondary'}>
+                  <label className="text-xs sm:text-sm font-medium">状态</label>
+                  <Badge variant={selectedBracelet.status === 'bound' ? 'default' : 'secondary'} className="text-xs">
                     {selectedBracelet.status === 'bound' ? '已绑定' : '未绑定'}
                   </Badge>
                 </div>
                 {selectedBracelet.user_name && (
                   <div>
-                    <label className="text-sm font-medium">绑定用户</label>
-                    <div className="mt-1 p-3 bg-muted rounded-md">
-                      <p className="font-medium">{selectedBracelet.user_name}</p>
+                    <label className="text-xs sm:text-sm font-medium">绑定用户</label>
+                    <div className="mt-1 p-2 sm:p-3 bg-muted rounded-md">
+                      <p className="font-medium text-sm">{selectedBracelet.user_name}</p>
                       <p className="text-xs text-muted-foreground">@{selectedBracelet.user_wechat_id}</p>
                     </div>
                   </div>
                 )}
                 <div>
-                  <label className="text-sm font-medium">创建时间</label>
+                  <label className="text-xs sm:text-sm font-medium">创建时间</label>
                   <p className="text-sm text-muted-foreground">
                     {new Date(selectedBracelet.created_at).toLocaleString('zh-CN')}
                   </p>
@@ -1319,27 +1359,28 @@ export default function AdminPage() {
 
         {/* 删除用户确认对话框 */}
         <Dialog open={!!deletingUser} onOpenChange={() => setDeletingUser(null)}>
-          <DialogContent>
+          <DialogContent className="w-[95vw] max-w-md">
             <DialogHeader>
-              <DialogTitle>确认删除用户</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-base sm:text-lg">确认删除用户</DialogTitle>
+              <DialogDescription className="text-sm">
                 此操作将永久删除用户及其相关数据，包括匹配记录和手环绑定。此操作不可撤销。
               </DialogDescription>
             </DialogHeader>
             {deletingUser && (
               <div className="py-4">
-                <p className="text-sm">
+                <p className="text-sm break-words">
                   确定要删除用户 <strong>{deletingUser.name}</strong> ({deletingUser.wechat_id}) 吗？
                 </p>
               </div>
             )}
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setDeletingUser(null)}>
+            <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
+              <Button variant="outline" onClick={() => setDeletingUser(null)} className="text-sm">
                 取消
               </Button>
               <Button 
                 variant="destructive" 
                 onClick={() => deletingUser && handleDeleteUser(deletingUser)}
+                className="text-sm"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
                 确认删除
