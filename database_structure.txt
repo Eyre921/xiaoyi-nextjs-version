@@ -1,0 +1,40 @@
+PostgreSQL Database Table Structures
+=====================================
+
+Table: bracelets
+--------------------------------------------------
+  nfc_uid: character varying(255) NOT NULL
+  status: character varying(50) NOT NULL DEFAULT 'new'::character varying
+  created_at: timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+
+Table: fortunes
+--------------------------------------------------
+  id: integer NOT NULL DEFAULT nextval('fortunes_id_seq'::regclass)
+  user_id: integer NOT NULL
+  fortune_text: text NOT NULL
+  created_at: timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+
+Table: matches
+--------------------------------------------------
+  id: integer NOT NULL DEFAULT nextval('matches_id_seq'::regclass)
+  user1_id: integer NOT NULL
+  user2_id: integer NOT NULL
+  fortune_id: integer
+  matched_at: timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+
+Table: users
+--------------------------------------------------
+  id: integer NOT NULL DEFAULT nextval('users_id_seq'::regclass)
+  name: character varying(255) NOT NULL
+  gender: character varying(10)
+  birthdate: date
+  wechat_id: character varying(255)
+  bio: text
+  nfc_uid: character varying(255)
+  status: character varying(50) NOT NULL DEFAULT 'pending_registration'::character varying
+  is_matchable: boolean DEFAULT true
+  created_at: timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+  last_fortune_at: timestamp with time zone
+  last_fortune_message: text
+  last_matched_as_target_at: timestamp with time zone
+
