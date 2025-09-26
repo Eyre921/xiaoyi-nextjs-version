@@ -151,3 +151,4 @@ temp/
 *.njsproj
 *.sln
 *.sw?
+.qoder
