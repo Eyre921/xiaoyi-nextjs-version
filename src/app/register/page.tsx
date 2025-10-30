@@ -15,28 +15,7 @@ interface UserData {
   allowRecommendation: boolean
 }
 
-interface RegistrationProps {
-  nfcuid: string
-  onRegistrationSuccess: () => void
-}
-
-// 数据转换函数：将新格式转换为后端期望的格式
-const convertUserDataToBackendFormat = (userData: UserData, nfcuid: string) => {
-  // 构建生日字符串 YYYY-MM-DD
-  const birthdate = `${userData.birthYear}-${userData.birthMonth.padStart(2, '0')}-${userData.birthDay.padStart(2, '0')}`
-  
-  return {
-    nfcuid,
-    name: userData.nickname,
-    gender: userData.gender,
-    birthdate,
-    wechat_id: userData.wechatId,
-    bio: userData.introduction,
-    is_matchable: userData.allowRecommendation
-  }
-}
-
-export default function Registration({ nfcuid, onRegistrationSuccess }: RegistrationProps) {
+export default function RegisterPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [userData, setUserData] = useState<UserData>({
     nickname: '',
@@ -48,7 +27,6 @@ export default function Registration({ nfcuid, onRegistrationSuccess }: Registra
     wechatId: '',
     allowRecommendation: false
   })
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const totalSteps = 4
 
@@ -61,43 +39,15 @@ export default function Registration({ nfcuid, onRegistrationSuccess }: Registra
     }
   }
 
-  const handleRegistrationComplete = async () => {
-    if (isSubmitting) return
+  const handleRegistrationComplete = () => {
+    // Here you would typically send data to your backend
+    console.log('Registration completed:', userData)
     
-    setIsSubmitting(true)
+    // Show success message or redirect
+    alert('注册完成！欢迎加入DD！')
     
-    try {
-      // 转换数据格式
-      const backendData = convertUserDataToBackendFormat(userData, nfcuid)
-      
-      console.log('Submitting registration data:', backendData)
-      
-      // 提交到后端API
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(backendData),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || '注册失败')
-      }
-
-      const result = await response.json()
-      console.log('Registration successful:', result)
-      
-      // 调用成功回调
-      onRegistrationSuccess()
-      
-    } catch (error) {
-      console.error('Registration error:', error)
-      alert(error instanceof Error ? error.message : '注册失败，请重试')
-    } finally {
-      setIsSubmitting(false)
-    }
+    // You could redirect to another page or show a success screen
+    // window.location.href = '/'
   }
 
   const prevStep = () => {
@@ -144,7 +94,6 @@ export default function Registration({ nfcuid, onRegistrationSuccess }: Registra
             <button
               onClick={prevStep}
               className="p-2 hover:bg-white/10 rounded-full transition-colors"
-              disabled={isSubmitting}
             >
               <ArrowLeft size={24} />
             </button>
@@ -209,20 +158,18 @@ export default function Registration({ nfcuid, onRegistrationSuccess }: Registra
       <div className="fixed bottom-8 right-8">
         <motion.button
           onClick={nextStep}
-          disabled={!canProceed() || isSubmitting}
+          disabled={!canProceed()}
           className={`${
             currentStep === totalSteps ? 'w-24 h-16 px-4' : 'w-16 h-16'
           } rounded-full flex items-center justify-center transition-all ${
-            canProceed() && !isSubmitting
+            canProceed()
               ? 'bg-white text-black hover:scale-110'
               : 'bg-white/20 text-white/40 cursor-not-allowed'
           }`}
-          whileHover={canProceed() && !isSubmitting ? { scale: 1.1 } : {}}
-          whileTap={canProceed() && !isSubmitting ? { scale: 0.95 } : {}}
+          whileHover={canProceed() ? { scale: 1.1 } : {}}
+          whileTap={canProceed() ? { scale: 0.95 } : {}}
         >
-          {isSubmitting ? (
-            <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          ) : currentStep === totalSteps ? (
+          {currentStep === totalSteps ? (
             <span className="text-sm font-medium">完成</span>
           ) : (
             <ArrowRight size={24} />
@@ -446,7 +393,8 @@ function WechatStep({ userData, onUpdate }: { userData: UserData; onUpdate: (fie
               <motion.div
                 className="absolute top-0.5 w-7 h-7 bg-white rounded-full shadow-sm"
                 animate={{
-                  x: userData.allowRecommendation ? 30 : 1
+                  x: userData.allowRecommendation ? 13:-18
+
                 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
