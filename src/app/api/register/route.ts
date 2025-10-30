@@ -50,10 +50,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<RegisterR
       
       if (bracelet.status !== 'available') {
         await client.query('ROLLBACK');
-        return NextResponse.json(
-          { error: '该 NFC UID 已被绑定。', message: '' },
-          { status: 409 }
+        
+        // 检查是否是当前用户已经注册过
+        const { rows: existingUsers } = await client.query(
+          "SELECT name FROM users WHERE nfc_uid = $1 AND status = 'active'", 
+          [nfcuid]
         );
+        
+        if (existingUsers.length > 0) {
+          // 如果是已注册用户，返回成功状态而不是错误
+          return NextResponse.json({
+            message: "您已经注册成功，正在跳转到运势页面..."
+          });
+        } else {
+          // 如果是被其他用户绑定，返回错误
+          return NextResponse.json(
+            { error: '该 NFC UID 已被其他用户绑定。', message: '' },
+            { status: 409 }
+          );
+        }
       }
 
       // Step 2: Create the new user

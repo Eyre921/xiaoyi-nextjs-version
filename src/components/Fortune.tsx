@@ -65,12 +65,17 @@ const FloatingDecorations: React.FC = () => {
 
 // 解析运势内容的函数
 const parseFortuneContent = (text: string) => {
-    // 首先尝试使用标准分隔符 ---
+    // 首先尝试使用标准分隔符 ---，提取到最后一个分隔符
     const standardParts = text.split('---');
     if (standardParts.length >= 2) {
+        // 找到最后一个分隔符的位置，前面的都是运势内容，后面的是联系信息
+        const lastSeparatorIndex = text.lastIndexOf('---');
+        const fortuneText = text.substring(0, lastSeparatorIndex).trim();
+        const contactInfo = text.substring(lastSeparatorIndex + 3).trim(); // +3 是因为 '---' 长度为3
+        
         return {
-            fortuneText: standardParts[0]?.trim() || '',
-            contactInfo: standardParts[1]?.trim() || ''
+            fortuneText: fortuneText || '',
+            contactInfo: contactInfo || ''
         };
     }
     
@@ -435,7 +440,7 @@ const InteractionArea: React.FC = () => {
 };
 
 interface FortuneData {
-  message: string;
+  message?: string | null;
   action?: string;
 }
 
@@ -443,10 +448,11 @@ interface FortunePageProps {
   nfcuid: string | null;
   data?: FortuneData | null;
   isLoading?: boolean;
-  error?: Error | null;
+  error?: string | null;
+  refetch?: () => void;
 }
 
-const FortunePage: React.FC<FortunePageProps> = ({ data, isLoading }) => {
+const FortunePage: React.FC<FortunePageProps> = ({ data, isLoading, error, refetch }) => {
 
     return (
         <div className="min-h-screen bg-black relative overflow-hidden">
@@ -474,7 +480,32 @@ const FortunePage: React.FC<FortunePageProps> = ({ data, isLoading }) => {
                 {/* 对话区域 */}
                 <div className="flex-1 overflow-y-auto px-4 py-6">
                     <AnimatePresence mode="wait">
-                        {data ? (
+                        {error ? (
+                            <ChatBubble>
+                                <div className="text-center">
+                                    <motion.div
+                                        className="w-16 h-16 mx-auto mb-4 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30"
+                                        initial={{ rotate: -10 }}
+                                        animate={{ rotate: 10 }}
+                                        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                                    >
+                                        <span className="text-2xl text-white">⚠️</span>
+                                    </motion.div>
+                                    <h3 className="text-lg font-bold text-white mb-2">生成运势时遇到了小问题</h3>
+                                    <p className="text-white/80 text-sm mb-4">{error}</p>
+                                    {refetch && (
+                                        <motion.button
+                                            onClick={refetch}
+                                            className="px-6 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-white font-medium hover:bg-white/30 transition-all duration-200"
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            重新生成
+                                        </motion.button>
+                                    )}
+                                </div>
+                            </ChatBubble>
+                        ) : data ? (
                             <FortuneCard text={data.message || ''} isLoading={!!isLoading} />
                         ) : (
                             <FortuneCard text="" isWaiting={true} />

@@ -1,0 +1,60 @@
+-- 插入50个测试用的NFC UID到bracelets表
+-- 这些UID明显标识为测试用途，格式为 test-uid-001 到 test-uid-050
+
+INSERT INTO bracelets (nfc_uid, status, created_at) VALUES 
+('test-uid-001', 'available', NOW()),
+('test-uid-002', 'available', NOW()),
+('test-uid-003', 'available', NOW()),
+('test-uid-004', 'available', NOW()),
+('test-uid-005', 'available', NOW()),
+('test-uid-006', 'available', NOW()),
+('test-uid-007', 'available', NOW()),
+('test-uid-008', 'available', NOW()),
+('test-uid-009', 'available', NOW()),
+('test-uid-010', 'available', NOW()),
+('test-uid-011', 'available', NOW()),
+('test-uid-012', 'available', NOW()),
+('test-uid-013', 'available', NOW()),
+('test-uid-014', 'available', NOW()),
+('test-uid-015', 'available', NOW()),
+('test-uid-016', 'available', NOW()),
+('test-uid-017', 'available', NOW()),
+('test-uid-018', 'available', NOW()),
+('test-uid-019', 'available', NOW()),
+('test-uid-020', 'available', NOW()),
+('test-uid-021', 'available', NOW()),
+('test-uid-022', 'available', NOW()),
+('test-uid-023', 'available', NOW()),
+('test-uid-024', 'available', NOW()),
+('test-uid-025', 'available', NOW()),
+('test-uid-026', 'available', NOW()),
+('test-uid-027', 'available', NOW()),
+('test-uid-028', 'available', NOW()),
+('test-uid-029', 'available', NOW()),
+('test-uid-030', 'available', NOW()),
+('test-uid-031', 'available', NOW()),
+('test-uid-032', 'available', NOW()),
+('test-uid-033', 'available', NOW()),
+('test-uid-034', 'available', NOW()),
+('test-uid-035', 'available', NOW()),
+('test-uid-036', 'available', NOW()),
+('test-uid-037', 'available', NOW()),
+('test-uid-038', 'available', NOW()),
+('test-uid-039', 'available', NOW()),
+('test-uid-040', 'available', NOW()),
+('test-uid-041', 'available', NOW()),
+('test-uid-042', 'available', NOW()),
+('test-uid-043', 'available', NOW()),
+('test-uid-044', 'available', NOW()),
+('test-uid-045', 'available', NOW()),
+('test-uid-046', 'available', NOW()),
+('test-uid-047', 'available', NOW()),
+('test-uid-048', 'available', NOW()),
+('test-uid-049', 'available', NOW()),
+('test-uid-050', 'available', NOW());
+
+-- 验证插入结果
+SELECT COUNT(*) as inserted_test_uids FROM bracelets WHERE nfc_uid LIKE 'test-uid-%';
+
+-- 查看插入的测试UID
+SELECT nfc_uid, status, created_at FROM bracelets WHERE nfc_uid LIKE 'test-uid-%' ORDER BY nfc_uid;

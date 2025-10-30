@@ -43,8 +43,9 @@ const ErrorPage = ({ message }: { message?: string | null }) => (
 export default function Home() {
   const [nfcuid, setNfcuid] = useState<string | null>(null);
   const [showSplash, setShowSplash] = useState(true);
-  const [hasRegistered, setHasRegistered] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [registrationCompleted, setRegistrationCompleted] = useState(false);
+  // 移除 hasRegistered 状态，改为根据 API 响应判断
 
   // 确保在客户端环境中执行参数解析
   useEffect(() => {
@@ -91,14 +92,19 @@ export default function Home() {
     }
   }, [isClient]);
 
-  const { data, isLoading, error } = useFortune(nfcuid, hasRegistered);
+  // 移除 hasRegistered 参数，让 useFortune 自己管理状态
+  const { data, loading, error, refetch } = useFortune(nfcuid);
   
   console.log('Current nfcuid state:', nfcuid);
-  console.log('useFortune result:', { data, isLoading, error });
+  console.log('useFortune result:', { data, loading, error });
+  console.log('Registration completed:', registrationCompleted);
 
-  // 注册成功后，重新获取数据并跳转到运势页面
+  // 注册成功后，直接设置状态跳转到运势页面并重新获取数据
   const handleRegistrationSuccess = () => {
-    setHasRegistered(true);
+    console.log('Registration successful, switching to fortune view...');
+    setRegistrationCompleted(true);
+    // 立即重新获取运势数据
+    refetch();
   };
 
   // 开场动画完成后的处理
@@ -106,30 +112,32 @@ export default function Home() {
     setShowSplash(false);
   };
 
-  // 显示开场动画
-  if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />;
-  }
+  // 临时隐藏开场动画
+  // if (showSplash) {
+  //   return <SplashScreen onComplete={handleSplashComplete} />;
+  // }
 
   if (error || !nfcuid) {
     return <ErrorPage message={error} />;
   }
 
-  // 决定渲染哪个页面
-  const shouldShowRegistration = data?.action === 'register' && !hasRegistered;
+  // 根据 API 响应决定渲染哪个页面
+  // 如果 data.action === 'register' 且注册未完成，说明用户未注册，显示注册页面
+  // 否则显示运势页面
+  const shouldShowRegistration = data?.action === 'register' && !registrationCompleted;
 
   if (shouldShowRegistration) {
     return <Registration nfcuid={nfcuid} onRegistrationSuccess={handleRegistrationSuccess} />;
   }
 
-  // 注册后或已登录用户，直接显示运势页面
-  // 在 hasRegistered 为 true 时，即使 data 为空也显示 Fortune，并传入 isLoading 状态
+  // 已注册用户或注册完成后，显示运势页面
   return (
     <Fortune 
       nfcuid={nfcuid} 
       data={data} 
-      isLoading={isLoading || (hasRegistered && !data)} 
-      error={error as Error | null} 
+      isLoading={loading} 
+      error={error} 
+      refetch={refetch}
     />
   );
 }

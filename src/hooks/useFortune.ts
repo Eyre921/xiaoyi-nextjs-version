@@ -4,79 +4,105 @@ import { useState, useEffect, useCallback } from 'react';
 
 interface FortuneData {
   action?: 'register';
-  message: string;
+  message?: string | null;
+  error?: string;
 }
 
-interface UseFortuneResult {
+interface ValidateUserResponse {
+  exists: boolean;
+  action?: 'register' | 'fortune';
+  error?: string;
+}
+
+interface UseFortune {
   data: FortuneData | null;
-  isLoading: boolean;
+  loading: boolean;
   error: string | null;
   refetch: () => void;
 }
 
-export const useFortune = (nfcuid: string | null, hasRegistered: boolean): UseFortuneResult => {
+export const useFortune = (nfcuid: string | null): UseFortune => {
   const [data, setData] = useState<FortuneData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasFetched, setHasFetched] = useState(false);
-
-  console.log('useFortune called with:', { nfcuid, hasRegistered });
 
   const fetchFortune = useCallback(async () => {
-    console.log('fetchFortune called with nfcuid:', nfcuid);
-    
     if (!nfcuid) {
-      console.log('No nfcuid provided, setting error');
-      setError('NFC UID is not provided.');
-      setIsLoading(false);
+      setData(null);
+      setLoading(false);
+      setError(null);
       return;
     }
 
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
 
     try {
-      const url = `/api/fortune?nfcuid=${nfcuid}`;
-      console.log('Fetching from URL:', url);
-      const response = await fetch(url);
+      // Step 1: 先验证用户是否存在，避免不必要的运势API调用
+      console.log(`[${new Date().toISOString()}] 开始验证用户: ${nfcuid}`);
+      const validateResponse = await fetch(`/api/validate-user?nfcuid=${encodeURIComponent(nfcuid)}`);
       
-      // 先获取文本再解析JSON，避免解析错误
-      const text = await response.text();
-      let result;
-      
-      try {
-        result = JSON.parse(text);
-      } catch (parseError) {
-        console.error('JSON解析错误:', parseError);
-        console.error('原始响应文本:', text);
-        throw new Error(`服务器返回了非JSON格式的数据: ${text.substring(0, 100)}`);
-      }
-      
-      if (!response.ok) {
-        throw new Error(result.error || `Server responded with status ${response.status}`);
+      if (!validateResponse.ok) {
+        if (validateResponse.status === 404) {
+          // NFC UID 不存在
+          throw new Error('无效的 NFC UID。请检查您的设备。');
+        } else if (validateResponse.status === 500) {
+          throw new Error('服务器内部错误，请稍后重试。');
+        } else {
+          throw new Error(`验证失败: ${validateResponse.status}`);
+        }
       }
 
-      setData(result as FortuneData);
-      setHasFetched(true);
-    } catch (err: unknown) {
-      console.error('useFortune error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch fortune.');
+      const validateResult: ValidateUserResponse = await validateResponse.json();
+      
+      // 如果用户不存在，直接返回注册提示，不调用运势API
+      if (!validateResult.exists) {
+        console.log(`[${new Date().toISOString()}] 用户不存在，引导注册: ${nfcuid}`);
+        setData({
+          action: 'register',
+          message: 'User not found. Please register first.'
+        });
+        return;
+      }
+
+      // Step 2: 用户存在，调用运势API
+      console.log(`[${new Date().toISOString()}] 用户存在，获取运势: ${nfcuid}`);
+      const response = await fetch(`/api/fortune?nfcuid=${encodeURIComponent(nfcuid)}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          // 这种情况理论上不应该发生，因为我们已经验证过用户存在
+          throw new Error('用户数据异常，请重试。');
+        } else if (response.status === 500) {
+          throw new Error('服务器内部错误，请稍后重试。');
+        } else {
+          throw new Error(`请求失败: ${response.status}`);
+        }
+      }
+
+      const result: FortuneData = await response.json();
+      setData(result);
+    } catch (err) {
+      console.error('获取运势数据失败:', err);
+      setError(err instanceof Error ? err.message : '获取运势数据失败');
+      setData(null);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   }, [nfcuid]);
 
-  // 手动重新获取数据的函数
-  const refetch = useCallback(() => {
-    setHasFetched(false);
+  useEffect(() => {
     fetchFortune();
   }, [fetchFortune]);
 
-  useEffect(() => {
-    if (nfcuid && (!hasFetched || hasRegistered)) {
-      fetchFortune();
-    }
-  }, [fetchFortune, hasFetched, hasRegistered, nfcuid]);
+  const refetch = useCallback(() => {
+    fetchFortune();
+  }, [fetchFortune]);
 
-  return { data, isLoading, error, refetch };
+  return {
+    data,
+    loading,
+    error,
+    refetch
+  };
 };

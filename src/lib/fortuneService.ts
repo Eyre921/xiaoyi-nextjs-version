@@ -137,13 +137,19 @@ D. 递上"故事传送门":
 
 两段式结构: 整体输出必须分为两个部分，由一个清晰的分隔符（---）隔开。
 
+【重要】分隔符格式要求：
+- 必须使用恰好3个短横线：---
+- 分隔符前后各有一个空行
+- 不要使用其他数量的短横线（如------或--）
+- 不要在分隔符中添加其他字符
+
 第一部分（互动私信）: 完整的、口语化的聊天内容。可适度使用 emoji (例如 🤔, ✨, 🚀, 🛠️) 来增强表现力。
 
 第二部分（联系人名片）: 在分隔符下方，提供一个格式清晰、方便复制的联系方式。
 
 名片格式（必须严格遵守）:
 
--- -
+---
 
 👉 **去发现这个有趣人类**
 
@@ -151,7 +157,7 @@ D. 递上"故事传送门":
 
 - **微信号：** ${user2.wechat_id}
 
-最终呈现: 输出一个完整的、无须修改的最终成品。不要包含任何关于你如何生成这段文字的元注释或解释。350个汉字以内`;
+最终呈现: 输出一个完整的、无须修改的最终成品。不要包含任何关于你如何生成这段文字的元注释或解释。不要添加额外的分隔符或格式标记。350个汉字以内`;
 
   const headers = {
     "Content-Type": "application/json",
@@ -188,14 +194,14 @@ D. 递上"故事传送门":
     // 特殊处理超时错误
     if (error.name === 'TimeoutError' || error.message?.includes('timeout')) {
       console.error(`AI服务调用超时 - 用户: ${user1.name}, 匹配用户: ${user2.name}`);
-      const timeoutMessage = `你好，${user1.name}！今日的能量场有些特殊，让我为你直接介绍一位有趣的朋友吧～\n\n${user2.name} 此刻也同在活动现场，"${user2.bio}"\n\n👉 去发现这个有趣人类\n- 姓名：${user2.name}\n- 微信号：${user2.wechat_id}`;
+      const timeoutMessage = `你好，${user1.name}！今日的能量场有些特殊，让我为你直接介绍一位有趣的朋友吧～\n\n${user2.name} 此刻也同在活动现场，"${user2.bio}"\n\n---\n\n👉 **去发现这个有趣人类**\n\n- **姓名：** ${user2.name}\n\n- **微信号：** ${user2.wechat_id}`;
       return timeoutMessage;
     }
     
     // Fallback - 通用错误处理
     const greeting = `你好，${user1.name}！今天为你匹配到同样热爱生活的 ${user2.name}。`;
     const welcome = `"${user1.bio}"\n与\n"${user2.bio}"`;
-    const userCard = `------\n💖 你今日的福缘之人 💖\n昵称：${user2.name}\n简介：${user2.bio}\n微信ID：${user2.wechat_id}`;
+    const userCard = `---\n\n👉 **去发现这个有趣人类**\n\n- **姓名：** ${user2.name}\n\n- **微信号：** ${user2.wechat_id}`;
     return `${greeting}\n\n${welcome}\n\n${userCard}`;
   }
 };

@@ -49,6 +49,7 @@ export default function Registration({ nfcuid, onRegistrationSuccess }: Registra
     allowRecommendation: false
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false)
 
   const totalSteps = 4
 
@@ -89,13 +90,17 @@ export default function Registration({ nfcuid, onRegistrationSuccess }: Registra
       const result = await response.json()
       console.log('Registration successful:', result)
       
-      // 调用成功回调
-      onRegistrationSuccess()
+      // 设置注册成功状态
+      setIsRegistrationSuccess(true)
+      
+      // 延迟调用成功回调，给用户看到成功状态
+      setTimeout(() => {
+        onRegistrationSuccess()
+      }, 1000)
       
     } catch (error) {
       console.error('Registration error:', error)
       alert(error instanceof Error ? error.message : '注册失败，请重试')
-    } finally {
       setIsSubmitting(false)
     }
   }
@@ -209,18 +214,22 @@ export default function Registration({ nfcuid, onRegistrationSuccess }: Registra
       <div className="fixed bottom-8 right-8">
         <motion.button
           onClick={nextStep}
-          disabled={!canProceed() || isSubmitting}
+          disabled={!canProceed() || isSubmitting || isRegistrationSuccess}
           className={`${
             currentStep === totalSteps ? 'w-24 h-16 px-4' : 'w-16 h-16'
           } rounded-full flex items-center justify-center transition-all ${
-            canProceed() && !isSubmitting
+            isRegistrationSuccess
+              ? 'bg-green-500 text-white'
+              : canProceed() && !isSubmitting
               ? 'bg-white text-black hover:scale-110'
               : 'bg-white/20 text-white/40 cursor-not-allowed'
           }`}
-          whileHover={canProceed() && !isSubmitting ? { scale: 1.1 } : {}}
-          whileTap={canProceed() && !isSubmitting ? { scale: 0.95 } : {}}
+          whileHover={canProceed() && !isSubmitting && !isRegistrationSuccess ? { scale: 1.1 } : {}}
+          whileTap={canProceed() && !isSubmitting && !isRegistrationSuccess ? { scale: 0.95 } : {}}
         >
-          {isSubmitting ? (
+          {isRegistrationSuccess ? (
+            <span className="text-sm font-medium">成功</span>
+          ) : isSubmitting ? (
             <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
           ) : currentStep === totalSteps ? (
             <span className="text-sm font-medium">完成</span>
@@ -446,7 +455,7 @@ function WechatStep({ userData, onUpdate }: { userData: UserData; onUpdate: (fie
               <motion.div
                 className="absolute top-0.5 w-7 h-7 bg-white rounded-full shadow-sm"
                 animate={{
-                  x: userData.allowRecommendation ? 30 : 1
+                  x: userData.allowRecommendation ? 15 : -15
                 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
