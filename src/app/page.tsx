@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Registration from '@/components/Registration';
 import Fortune from '@/components/Fortune';
 import SplashScreen from '@/components/SplashScreen';
+import IntroPage from '@/components/IntroPage';
 import { useFortune } from '@/hooks/useFortune';
 
 // 错误页面组件
@@ -43,6 +44,7 @@ const ErrorPage = ({ message }: { message?: string | null }) => (
 export default function Home() {
   const [nfcuid, setNfcuid] = useState<string | null>(null);
   const [showSplash, setShowSplash] = useState(true);
+  const [showIntro, setShowIntro] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [registrationCompleted, setRegistrationCompleted] = useState(false);
   // 移除 hasRegistered 状态，改为根据 API 响应判断
@@ -112,6 +114,11 @@ export default function Home() {
     setShowSplash(false);
   };
 
+  // 引导页完成后的处理
+  const handleIntroComplete = () => {
+    setShowIntro(false);
+  };
+
   // 临时隐藏开场动画
   // if (showSplash) {
   //   return <SplashScreen onComplete={handleSplashComplete} />;
@@ -121,10 +128,36 @@ export default function Home() {
     return <ErrorPage message={error} />;
   }
 
+  // 在数据加载期间显示加载状态，避免页面跳动
+  if (loading && !data) {
+    return (
+      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+        <motion.div
+          className="text-white text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full mx-auto mb-4"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          <p className="text-sm text-white/60">正在加载...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   // 根据 API 响应决定渲染哪个页面
   // 如果 data.action === 'register' 且注册未完成，说明用户未注册，显示注册页面
   // 否则显示运势页面
   const shouldShowRegistration = data?.action === 'register' && !registrationCompleted;
+
+  // 如果需要显示注册页面且引导页还未完成，先显示引导页
+  if (shouldShowRegistration && showIntro) {
+    return <IntroPage onComplete={handleIntroComplete} />;
+  }
 
   if (shouldShowRegistration) {
     return <Registration nfcuid={nfcuid} onRegistrationSuccess={handleRegistrationSuccess} />;

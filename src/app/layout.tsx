@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'DD 运势',
-  description: 'DD 运势 - 通过 NFC 手环开启你的专属体验之旅',
+  title: 'Autopia 时刻',
+  description: 'Autopia 时刻 - 通过 NFC 手环开启你的专属体验之旅',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

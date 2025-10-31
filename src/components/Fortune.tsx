@@ -3,8 +3,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Star, Heart, Zap, Copy, Check } from 'lucide-react';
+import { Star, Heart, Zap, Copy, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 // 装饰元素组件
@@ -135,20 +136,63 @@ const extractWechatId = (contactInfo: string) => {
 
 // DD头像组件
 const DDAvatar: React.FC = () => (
-    <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }}
-        className="w-12 h-12 bg-black rounded-full flex items-center justify-center shadow-lg flex-shrink-0"
-    >
-        <div className="w-12 h-12 flex items-center justify-center">
-            <img 
-                src="/logo.svg" 
-                alt="DD Logo" 
-                className="w-full h-full object-contain filter invert"
-            />
-        </div>
-    </motion.div>
+    <div className="relative flex-shrink-0">
+        {/* 呼吸光晕背景层 */}
+        <motion.div
+            className="absolute inset-0 w-12 h-12 rounded-full"
+            style={{
+                background: 'radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.1) 70%, transparent 100%)',
+                filter: 'blur(8px)',
+            }}
+            animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.6, 0.9, 0.6],
+            }}
+            transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+            }}
+        />
+        
+        {/* 第二层光晕 */}
+        <motion.div
+            className="absolute inset-0 w-12 h-12 rounded-full"
+            style={{
+                background: 'radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, transparent 80%)',
+                filter: 'blur(4px)',
+            }}
+            animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.4, 0.7, 0.4],
+            }}
+            transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5
+            }}
+        />
+        
+        {/* 头像主体 */}
+        <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className="relative w-12 h-12 bg-black rounded-full flex items-center justify-center shadow-lg border border-white/20"
+            style={{
+                boxShadow: '0 0 20px rgba(0,0,0,0.5), 0 0 40px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)'
+            }}
+        >
+            <div className="w-10 h-10 flex items-center justify-center">
+                <img 
+                    src="/avatar.svg" 
+                    alt="DD Avatar" 
+                    className="w-full h-full object-contain"
+                />
+            </div>
+        </motion.div>
+    </div>
 );
 
 // 聊天气泡组件
@@ -346,7 +390,7 @@ const FortuneCard: React.FC<{ text: string; isLoading?: boolean; isWaiting?: boo
                         className="w-6 h-6 border-2 border-purple-200 border-t-purple-600 rounded-full"
                     />
                     <span className="text-white/80">
-                        {isWaiting ? '正在生成Daily Date....' : '正在为您生成专属运势...'}
+                        {isWaiting ? '正在生成Autopia 时刻....' : '正在为您生成专属运势...'}
                     </span>
                 </div>
             </ChatBubble>
@@ -420,7 +464,7 @@ const InteractionArea: React.FC = () => {
                     >
                         <Heart size={20} />
                     </motion.div>
-                    <span className="text-white font-medium">与 DD 的聊天对话功能即将上线</span>
+                    <span className="text-white font-medium">与 天天组合 的AI聊天对话功能即将上线</span>
                     <motion.div
                         animate={isHovered ? { scale: 1.2, rotate: -15 } : { scale: 1, rotate: 0 }}
                         className="text-white/80"
@@ -455,26 +499,281 @@ interface FortunePageProps {
 const FortunePage: React.FC<FortunePageProps> = ({ data, isLoading, error, refetch }) => {
 
     return (
-        <div className="min-h-screen bg-black relative overflow-hidden">
-            {/* 装饰元素背景 */}
-            <FloatingDecorations />
-            
-            {/* 现代化背景装饰 */}
-            <div className="absolute inset-0">
-                <div className="absolute top-20 left-10 w-64 h-64 bg-white/15 rounded-full blur-3xl" />
-                <div className="absolute top-40 right-20 w-48 h-48 bg-white/20 rounded-full blur-3xl" />
-                <div className="absolute bottom-32 left-20 w-56 h-56 bg-white/15 rounded-full blur-3xl" />
-                <div className="absolute bottom-20 right-10 w-72 h-72 bg-white/20 rounded-full blur-3xl" />
+        <div className="min-h-screen bg-black relative" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+            {/* 固定背景层，使用流动的CSS渐变背景 */}
+            <div
+                className="fixed inset-0 z-0 pointer-events-none"
+                style={{
+                    background: `
+                        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.4) 0%, transparent 60%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.4) 0%, transparent 60%),
+                        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 60%),
+                        linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #7209b7 100%)
+                    `,
+                    backgroundSize: '400% 400%',
+                    backgroundAttachment: 'fixed',
+                    animation: 'flowingBackground 15s ease-in-out infinite'
+                }}
+            />
+
+            {/* 交错的多行 Autopia 玻璃拟态字样背景 */}
+            <div className="fixed inset-0 z-1 pointer-events-none overflow-hidden">
+                {/* 最上面一行 */}
+                <motion.div 
+                    className="absolute top-8 left-0 w-full flex justify-start"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ duration: 22, repeat: Infinity, ease: 'linear', delay: 2 }}
+                >
+                    <div 
+                        className="text-5xl sm:text-6xl font-bold text-white/5 select-none whitespace-nowrap transform rotate-1"
+                        style={{
+                            fontFamily: 'system-ui, -apple-system, sans-serif',
+                            textShadow: '0 0 20px rgba(255, 255, 255, 0.06)',
+                            backdropFilter: 'blur(1px)',
+                            WebkitBackdropFilter: 'blur(1px)',
+                            background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
+                            WebkitBackgroundClip: 'text',
+                            backgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                        }}
+                    >
+                        AUTOPIA AUTOPIA AUTOPIA AUTOPIA AUTOPIA
+                    </div>
+                </motion.div>
+
+                {/* 第一行 */}
+                <motion.div 
+                    className="absolute top-1/4 left-0 w-full flex justify-start"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                >
+                    <div 
+                        className="text-6xl sm:text-7xl font-bold text-white/8 select-none whitespace-nowrap"
+                        style={{
+                            fontFamily: 'system-ui, -apple-system, sans-serif',
+                            textShadow: '0 0 30px rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(1px)',
+                            WebkitBackdropFilter: 'blur(1px)',
+                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
+                            WebkitBackgroundClip: 'text',
+                            backgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                        }}
+                    >
+                         天天爱音乐节 天天爱音乐节 天天爱音乐节 天天爱音乐节
+                     </div>
+                </motion.div>
+
+                {/* 第二行 */}
+                <motion.div 
+                    className="absolute top-1/2 left-0 w-full flex justify-end"
+                    initial={{ x: '100%' }}
+                    animate={{ x: '-100%' }}
+                    transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+                >
+                    <div 
+                        className="text-5xl sm:text-6xl font-bold text-white/6 select-none whitespace-nowrap transform rotate-3"
+                        style={{
+                            fontFamily: 'system-ui, -apple-system, sans-serif',
+                            textShadow: '0 0 25px rgba(255, 255, 255, 0.08)',
+                            backdropFilter: 'blur(1px)',
+                            WebkitBackdropFilter: 'blur(1px)',
+                            background: 'linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%)',
+                            WebkitBackgroundClip: 'text',
+                            backgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                        }}
+                    >
+                        MUSIC FESTIVAL MUSIC FESTIVAL
+                    </div>
+                </motion.div>
+
+                {/* 第三行 */}
+                <motion.div 
+                    className="absolute top-3/4 left-0 w-full flex justify-start"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ duration: 18, repeat: Infinity, ease: 'linear', delay: 5 }}
+                >
+                    <div 
+                        className="text-7xl sm:text-8xl font-bold text-white/7 select-none whitespace-nowrap transform -rotate-2"
+                        style={{
+                            fontFamily: 'system-ui, -apple-system, sans-serif',
+                            textShadow: '0 0 35px rgba(255, 255, 255, 0.12)',
+                            backdropFilter: 'blur(1px)',
+                            WebkitBackdropFilter: 'blur(1px)',
+                            background: 'linear-gradient(225deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.07) 100%)',
+                            WebkitBackgroundClip: 'text',
+                            backgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                        }}
+                    >
+                        AUTOPIA AUTOPIA AUTOPIA
+                    </div>
+                </motion.div>
+
+                {/* 最下面一行 */}
+                <motion.div 
+                    className="absolute bottom-8 left-0 w-full flex justify-end"
+                    initial={{ x: '100%' }}
+                    animate={{ x: '-100%' }}
+                    transition={{ duration: 24, repeat: Infinity, ease: 'linear', delay: 8 }}
+                >
+                    <div 
+                        className="text-6xl sm:text-7xl font-bold text-white/6 select-none whitespace-nowrap transform -rotate-1"
+                        style={{
+                            fontFamily: 'system-ui, -apple-system, sans-serif',
+                            textShadow: '0 0 25px rgba(255, 255, 255, 0.08)',
+                            backdropFilter: 'blur(1px)',
+                            WebkitBackdropFilter: 'blur(1px)',
+                            background: 'linear-gradient(270deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+                            WebkitBackgroundClip: 'text',
+                            backgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                        }}
+                    >
+                        AUTOPIA AUTOPIA AUTOPIA AUTOPIA
+                    </div>
+                </motion.div>
             </div>
 
-            {/* 简化的浮动装饰图标 */}
-            <FloatingIcon icon={<Sparkles size={12} />} delay={0} x="top-20" y="left-8" />
-            <FloatingIcon icon={<Star size={10} />} delay={1} x="top-32" y="right-12" />
-            <FloatingIcon icon={<Heart size={10} />} delay={2} x="bottom-40" y="left-16" />
-            <FloatingIcon icon={<Zap size={12} />} delay={3} x="bottom-24" y="right-8" />
+            {/* 流动的音乐节emoji */}
+            <div className="fixed inset-0 z-2 pointer-events-none overflow-hidden">
+                {/* 音符 */}
+                <motion.div 
+                    className="absolute text-4xl opacity-20"
+                    initial={{ left: '-10%', top: '20%' }}
+                    animate={{ left: '110%', top: '80%' }}
+                    transition={{ duration: 35, repeat: Infinity, ease: 'linear', delay: 0 }}
+                >
+                    🎵
+                </motion.div>
+
+                {/* 麦克风 */}
+                <motion.div 
+                    className="absolute text-3xl opacity-15"
+                    initial={{ right: '-10%', top: '60%' }}
+                    animate={{ right: '110%', top: '30%' }}
+                    transition={{ duration: 40, repeat: Infinity, ease: 'linear', delay: 10 }}
+                >
+                    🎤
+                </motion.div>
+
+                {/* 吉他 */}
+                <motion.div 
+                    className="absolute text-3xl opacity-18"
+                    initial={{ left: '-10%', bottom: '30%' }}
+                    animate={{ left: '110%', bottom: '60%' }}
+                    transition={{ duration: 45, repeat: Infinity, ease: 'linear', delay: 20 }}
+                >
+                    🎸
+                </motion.div>
+
+                {/* 星星 */}
+                <motion.div 
+                    className="absolute text-2xl opacity-12"
+                    initial={{ right: '-10%', top: '25%' }}
+                    animate={{ right: '110%', bottom: '25%' }}
+                    transition={{ duration: 38, repeat: Infinity, ease: 'linear', delay: 15 }}
+                >
+                    ⭐
+                </motion.div>
+
+                {/* 鲜花 - 玫瑰 */}
+                <motion.div 
+                    className="absolute text-3xl opacity-16 drop-shadow-[0_0_8px_rgba(255,182,193,0.6)]"
+                    initial={{ left: '-10%', top: '45%' }}
+                    animate={{ left: '110%', top: '15%' }}
+                    transition={{ duration: 42, repeat: Infinity, ease: 'linear', delay: 5 }}
+                >
+                    🌹
+                </motion.div>
+
+                {/* 水晶 */}
+                <motion.div 
+                    className="absolute text-2xl opacity-14 drop-shadow-[0_0_10px_rgba(147,197,253,0.7)]"
+                    initial={{ right: '-10%', bottom: '40%' }}
+                    animate={{ right: '110%', bottom: '70%' }}
+                    transition={{ duration: 50, repeat: Infinity, ease: 'linear', delay: 25 }}
+                >
+                    💎
+                </motion.div>
+
+                {/* 手链 */}
+                <motion.div 
+                    className="absolute text-2xl opacity-13 drop-shadow-[0_0_6px_rgba(255,215,0,0.5)]"
+                    initial={{ left: '-10%', bottom: '20%' }}
+                    animate={{ left: '110%', bottom: '50%' }}
+                    transition={{ duration: 36, repeat: Infinity, ease: 'linear', delay: 30 }}
+                >
+                    📿
+                </motion.div>
+
+                {/* 樱花 */}
+                <motion.div 
+                    className="absolute text-3xl opacity-15 drop-shadow-[0_0_8px_rgba(255,192,203,0.6)]"
+                    initial={{ right: '-10%', top: '80%' }}
+                    animate={{ right: '110%', top: '50%' }}
+                    transition={{ duration: 44, repeat: Infinity, ease: 'linear', delay: 8 }}
+                >
+                    🌸
+                </motion.div>
+
+                {/* 音乐符号 */}
+                <motion.div 
+                    className="absolute text-2xl opacity-17 drop-shadow-[0_0_6px_rgba(138,43,226,0.5)]"
+                    initial={{ left: '-10%', top: '65%' }}
+                    animate={{ left: '110%', top: '35%' }}
+                    transition={{ duration: 39, repeat: Infinity, ease: 'linear', delay: 18 }}
+                >
+                    🎶
+                </motion.div>
+
+                {/* 向日葵 */}
+                <motion.div 
+                    className="absolute text-3xl opacity-16 drop-shadow-[0_0_10px_rgba(255,215,0,0.6)]"
+                    initial={{ right: '-10%', top: '15%' }}
+                    animate={{ right: '110%', top: '85%' }}
+                    transition={{ duration: 48, repeat: Infinity, ease: 'linear', delay: 12 }}
+                >
+                    🌻
+                </motion.div>
+
+                {/* 宝石戒指 */}
+                <motion.div 
+                    className="absolute text-2xl opacity-14 drop-shadow-[0_0_8px_rgba(255,20,147,0.6)]"
+                    initial={{ left: '-10%', top: '10%' }}
+                    animate={{ left: '110%', top: '90%' }}
+                    transition={{ duration: 41, repeat: Infinity, ease: 'linear', delay: 22 }}
+                >
+                    💍
+                </motion.div>
+
+                {/* 耳机 */}
+                <motion.div 
+                    className="absolute text-3xl opacity-15 drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]"
+                    initial={{ right: '-10%', bottom: '15%' }}
+                    animate={{ right: '110%', bottom: '85%' }}
+                    transition={{ duration: 37, repeat: Infinity, ease: 'linear', delay: 28 }}
+                >
+                    🎧
+                </motion.div>
+
+                {/* 郁金香 */}
+                <motion.div 
+                    className="absolute text-3xl opacity-16 drop-shadow-[0_0_8px_rgba(255,105,180,0.6)]"
+                    initial={{ left: '-10%', bottom: '60%' }}
+                    animate={{ left: '110%', bottom: '10%' }}
+                    transition={{ duration: 43, repeat: Infinity, ease: 'linear', delay: 6 }}
+                >
+                    🌷
+                </motion.div>
+            </div>
 
             {/* 主要内容区域 */}
-            <div className="relative z-10 max-w-md mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col min-h-screen">
+            <div className="relative z-10 max-w-md mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col min-h-screen" style={{ paddingTop: 'max(1.5rem, env(safe-area-inset-top) + 1.5rem)' }}>
 
 
                 {/* 对话区域 */}

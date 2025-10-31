@@ -12,6 +12,10 @@ export interface DatabaseConfig {
   max: number;
   idleTimeoutMillis: number;
   connectionTimeoutMillis: number;
+  keepAlive: boolean;
+  keepAliveInitialDelayMillis: number;
+  statement_timeout: number;
+  query_timeout: number;
 }
 
 export interface AIProviderConfig {
@@ -39,14 +43,18 @@ export interface AppConfig {
 
 export const appConfig: AppConfig = {
   database: {
-    user: process.env.DB_USER || '',
-    host: process.env.DB_HOST || '',
-    database: process.env.DB_DATABASE || '',
+    user: process.env.DB_USER || 'postgres',
+    host: process.env.DB_HOST || 'localhost',
+    database: process.env.DB_DATABASE || 'xiaoyi',
     password: process.env.DB_PASSWORD || '',
-    port: parseInt(process.env.DB_PORT || '5432', 10),
+    port: parseInt(process.env.DB_PORT || '5432'),
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    connectionTimeoutMillis: 10000,
+    keepAlive: true,
+    keepAliveInitialDelayMillis: 10000,
+    statement_timeout: 30000,
+    query_timeout: 30000,
   },
   server: {
     port: parseInt(process.env.PORT || '3001', 10),

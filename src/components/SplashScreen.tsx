@@ -138,7 +138,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
           </div>
         )}
         <div className="p-6 text-center">
-          <h2 className="text-xl font-bold text-white mb-2">Daily Date</h2>
+          <h2 className="text-xl font-bold text-white mb-2">Autopia 时刻</h2>
           <p className="text-white/80">欢迎来到你的专属世界</p>
         </div>
       </div>

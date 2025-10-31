@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Calendar, MessageCircle, Heart, Sparkles, Star, Zap, ArrowRight, Users, Shield, UserCheck } from 'lucide-react';
+import { User, Calendar, MessageCircle, Heart, Sparkles, Star, Zap, ArrowRight, Users, Shield, UserCheck, Music } from 'lucide-react';
 
 // 装饰元素组件
 const FloatingDecorations: React.FC = () => {
@@ -69,24 +69,67 @@ interface RegistrationPageProps {
 
 // DD头像组件
 const DDAvatar: React.FC = () => (
-    <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }}
-        className="w-12 h-12 bg-black rounded-full flex items-center justify-center shadow-lg flex-shrink-0"
-    >
+    <div className="relative flex-shrink-0">
+        {/* 呼吸光晕背景层 */}
         <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 flex items-center justify-center"
+            className="absolute inset-0 w-12 h-12 rounded-full"
+            style={{
+                background: 'radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.1) 70%, transparent 100%)',
+                filter: 'blur(8px)',
+            }}
+            animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.6, 0.9, 0.6],
+            }}
+            transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+            }}
+        />
+        
+        {/* 第二层光晕 */}
+        <motion.div
+            className="absolute inset-0 w-12 h-12 rounded-full"
+            style={{
+                background: 'radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, transparent 80%)',
+                filter: 'blur(4px)',
+            }}
+            animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.4, 0.7, 0.4],
+            }}
+            transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5
+            }}
+        />
+        
+        {/* 头像主体 */}
+        <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className="relative w-12 h-12 bg-black rounded-full flex items-center justify-center shadow-lg border border-white/20"
+            style={{
+                boxShadow: '0 0 20px rgba(0,0,0,0.5), 0 0 40px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)'
+            }}
         >
-            <img 
-                src="/logo.svg" 
-                alt="DD Logo" 
-                className="w-full h-full object-contain filter invert"
-            />
+            <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="w-10 h-10 flex items-center justify-center"
+            >
+                <img 
+                    src="/avatar.svg" 
+                    alt="DD Avatar" 
+                    className="w-full h-full object-contain"
+                />
+            </motion.div>
         </motion.div>
-    </motion.div>
+    </div>
 );
 
 // 聊天气泡组件 - 毛玻璃效果
@@ -606,6 +649,7 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ nfcuid, onRegistrat
     birthdate: '',
     wechat_id: '',
     bio: '',
+    favoriteSong: '',
     is_matchable: true
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -668,6 +712,18 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ nfcuid, onRegistrat
       return;
     }
 
+    if (!formData.favoriteSong.trim()) {
+      setError('请分享您最喜欢的歌曲');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.favoriteSong.trim().length < 5) {
+      setError('请详细分享一下您最喜欢的歌曲');
+      setIsSubmitting(false);
+      return;
+    }
+
     if (!nfcuid) {
       setError('缺少NFC UID参数');
       setIsSubmitting(false);
@@ -675,6 +731,12 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ nfcuid, onRegistrat
     }
 
     try {
+      // 合并个人简介和最喜欢歌曲
+      const combinedBio = `${formData.bio.trim()}\n\n【我最喜欢的歌曲】\n${formData.favoriteSong.trim()}`;
+      
+      // 准备发送到后端的数据，移除favoriteSong字段
+      const { favoriteSong, ...dataToSend } = formData;
+      
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -682,7 +744,8 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ nfcuid, onRegistrat
         },
         body: JSON.stringify({
           nfcuid,
-          ...formData
+          ...dataToSend,
+          bio: combinedBio
         }),
       });
 
@@ -841,6 +904,18 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ nfcuid, onRegistrat
                     delay={1.8}
                   />
 
+                  {/* 最喜欢歌曲输入 */}
+                  <FormTextarea
+                    label="这次演唱会你最喜欢的一首歌"
+                    icon={<Music size={16} />}
+                    name="favoriteSong"
+                    value={formData.favoriteSong}
+                    onChange={handleInputChange}
+                    placeholder="分享一下这次演唱会中你最喜欢的歌曲，以及它为什么打动了你..."
+                    required
+                    delay={1.85}
+                  />
+
                   {/* 推荐设置 */}
                   <MatchableToggle
                     label="推荐设置"
@@ -848,7 +923,7 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ nfcuid, onRegistrat
                     name="is_matchable"
                     value={formData.is_matchable}
                     onChange={handleMatchableChange}
-                    delay={1.9}
+                    delay={1.95}
                   />
 
                   {/* 现代化错误信息 */}
