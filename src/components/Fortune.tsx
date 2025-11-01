@@ -390,7 +390,9 @@ const FortuneCard: React.FC<{ text: string; isLoading?: boolean; isWaiting?: boo
                         className="w-6 h-6 border-2 border-purple-200 border-t-purple-600 rounded-full"
                     />
                     <span className="text-white/80">
-                        {isWaiting ? '正在生成Autopia 时刻....' : '正在为您生成专属运势...'}
+                        {isWaiting 
+                          ? 'AI正在为你生成你的Autopia时刻，需要约30s，稍等片刻～' 
+                          : 'AI正在为你生成你的Autopia时刻，需要约30s，稍等片刻～'}
                     </span>
                 </div>
             </ChatBubble>
