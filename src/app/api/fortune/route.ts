@@ -80,16 +80,26 @@ export async function GET(request: NextRequest): Promise<NextResponse<FortuneRes
 
     console.log(`[${new Date().toISOString()}] 找到用户: ${user.id} (${user.name})`);
 
-    // 已存在用户，处理运势生成
-    const now = new Date();
-    const lastFortuneDate = user.last_fortune_at ? new Date(user.last_fortune_at) : null;
-    
-    const today8AM = new Date();
-    today8AM.setHours(8, 0, 0, 0);
-
-    const needsUpdate = !lastFortuneDate || (now >= today8AM && lastFortuneDate < today8AM);
-
-    console.log(`[${new Date().toISOString()}] 运势更新判断 - needsUpdate: ${needsUpdate}, lastFortuneDate: ${lastFortuneDate}, today8AM: ${today8AM}`);
+    // 已存在用户，处理运势生成（改为上海时区的 8 点刷新逻辑）
+    // 通过 SQL 在服务器侧统一使用 Asia/Shanghai，避免 Node 与 DB 时区不一致
+    const tzStart = Date.now();
+    const tzResult = await db.query<{ needs_update: boolean; sh_boundary: string }>(
+      `SELECT 
+         (
+           (NOW() AT TIME ZONE 'Asia/Shanghai') >= (DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Shanghai') + INTERVAL '8 hours')
+           AND COALESCE(last_fortune_at, 'epoch'::timestamptz) < (
+             (DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Shanghai') + INTERVAL '8 hours') AT TIME ZONE 'Asia/Shanghai'
+           )
+         ) AS needs_update,
+         to_char((DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Shanghai') + INTERVAL '8 hours'), 'YYYY-MM-DD HH24:MI:SS') AS sh_boundary
+       FROM users 
+       WHERE id = $1`,
+      [user.id]
+    );
+    console.log(`[${new Date().toISOString()}] 上海时区刷新判断耗时: ${Date.now() - tzStart}ms`);
+    const needsUpdate = tzResult.rows[0]?.needs_update ?? true;
+    const shBoundaryStr = tzResult.rows[0]?.sh_boundary;
+    console.log(`[${new Date().toISOString()}] 运势更新判断(Asia/Shanghai) - needsUpdate: ${needsUpdate}, lastFortuneAt: ${user.last_fortune_at}, Shanghai 8AM boundary: ${shBoundaryStr}`);
 
     if (needsUpdate) {
       console.log(`[${new Date().toISOString()}] 需要生成新运势，开始调用generateNewFortune...`);

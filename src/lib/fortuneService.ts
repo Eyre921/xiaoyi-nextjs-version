@@ -227,6 +227,7 @@ D. 提供"连接方式":
 
 // --- 辅助函数 2: 查找匹配用户 (包含最新算法 + 每日被推荐冷却) ---
 const findMatchForUser = async (user: User): Promise<User | null> => {
+  console.log(`[${new Date().toISOString()}] 匹配查询使用 Asia/Shanghai 当日边界(00:00) 进行冷却比较`);
   const query = `
     SELECT u.id, u.name, u.gender, u.bio, u.wechat_id
     FROM users u
@@ -241,7 +242,9 @@ const findMatchForUser = async (user: User): Promise<User | null> => {
       )
       AND (
         u.last_matched_as_target_at IS NULL 
-        OR u.last_matched_as_target_at < CURRENT_DATE
+        OR u.last_matched_as_target_at < (
+          DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Shanghai') AT TIME ZONE 'Asia/Shanghai'
+        )
       )
     ORDER BY
       CASE

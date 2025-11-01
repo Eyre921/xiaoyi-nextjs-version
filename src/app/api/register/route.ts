@@ -88,13 +88,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<RegisterR
       await client.query('COMMIT');
       console.log(`用户 ${newUser.name} (NFC: ${nfcuid}) 已成功注册并绑定。`);
 
-      // Step 4: Asynchronously generate the user's first fortune and match
-      setTimeout(() => {
-        generateNewFortune(newUser).catch((err: Error) => {
-          console.error(`为用户 ${newUser.id} 生成初始运势时出错:`, err);
-          console.error(`错误详情 - 用户ID: ${newUser.id}, 名称: ${newUser.name}, 错误类型: ${err.name || 'Unknown'}, 错误消息: ${err.message || 'No message'}`);
-        });
-      }, 100);
+      // Step 4: 由 /api/fortune 统一生成运势，避免并发重复生成
+      // 移除了注册后的异步生成调用，用户进入运势页面时再生成
 
       // Step 5: Return an immediate successful response
       return NextResponse.json({
