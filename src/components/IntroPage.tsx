@@ -46,13 +46,13 @@ export default function IntroPage({ onComplete }: IntroPageProps) {
           setIsVisible(true)
         }, 800)
       } else {
-        // 最后一个section显示完后，等待一段时间再结束
+        // 最后一个section显示完后，额外停留 1s，然后淡出并结束
         setTimeout(() => {
           setIsVisible(false)
           setTimeout(() => {
             onComplete()
-          }, 1000)
-        }, currentSectionData.duration)
+          }, 1200) // 与退出动画 1.2s 对齐
+        }, 2000)
       }
     }, currentSectionData.duration)
 
@@ -143,8 +143,9 @@ export default function IntroPage({ onComplete }: IntroPageProps) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ 
-                      delay: (index + 5) * 0.5,
-                      duration: 0.8,
+                      // 增加 0.5s 额外停顿，使下半部分更晚出现
+                      delay: (index + 6) * 0.5,
+                      duration: 1.0,
                       ease: [0.25, 0.46, 0.45, 0.94]
                     }}
                     className={
@@ -170,7 +171,7 @@ export default function IntroPage({ onComplete }: IntroPageProps) {
         onClick={onComplete}
         className="absolute top-8 right-8 text-gray-500 hover:text-white transition-all duration-300 text-sm font-light tracking-wider px-4 py-2 border border-gray-600 hover:border-white/30 rounded-sm"
       >
-        SKIP
+        跳过
       </motion.button>
     </div>
   )
